@@ -1,0 +1,28 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "2039",
+    "database": "ltw2",
+    "port" : "5432",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": null,
+    "database": "database_test",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "eqxtishcrfufdn",
+    "password": "1add2ce978212844b89466d5353cfc68b20d28d8d8af05529589480287e1b9f0",
+    "hostname":"ec2-35-170-85-206.compute-1.amazonaws.com",
+    "database": "d8mdt9206kfkpt",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true, 
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}
