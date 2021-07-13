@@ -17,6 +17,9 @@ Cinema.associate = function (models) {
     as: 'theaters'
   });
 };
+Cinema.findById = async function(id){
+  return User.findByPk(id);
+};
 return Cinema;
 }
 

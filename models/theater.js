@@ -34,7 +34,7 @@ const Theater = sequelize.define("Theater", {
     validate: {
       notNull: { args: true, msg: "number_column cannot be null" }
     },
-  },
+  }
 });
 Theater.associate = function (models) {
   Theater.belongsTo(models.Cinema, {
@@ -53,6 +53,9 @@ Theater.associate = function (models) {
     sourceKey: 'id',
     as: 'showtimes'
   });
+  Theater.findById = async function(id){
+    return Theater.findByPk(id);
+  };
 };
 return Theater;
 };
