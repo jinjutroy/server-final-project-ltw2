@@ -1,10 +1,12 @@
+
 module.exports = (sequelize, Datatypes) => {
   var Booking = sequelize.define("Booking", {
     id: {
       primaryKey: true,
       type: Datatypes.UUID,
       allowNull: false,
-      unique: true
+      unique: true,
+      defaultValue: sequelize.literal('gen_random_uuid()')
     },
     user_id: {
       type: Datatypes.INTEGER,

@@ -1,6 +1,13 @@
 module.exports = (sequelize, Datatypes) => {
 //Vé
 const Ticket = sequelize.define("Ticket", {
+  id: {
+    primaryKey: true,
+    type: Datatypes.UUID,
+    allowNull: false,
+    unique: true,
+    defaultValue: sequelize.literal('gen_random_uuid()')
+  },
   booking_id: {
     type: Datatypes.UUID,
     allowNull: true,
