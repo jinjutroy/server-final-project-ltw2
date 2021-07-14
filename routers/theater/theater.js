@@ -19,7 +19,7 @@ router.get("/:id",asyncHandler( async (req, res) => {
     if( !Theater) {
         res.status(404).json({
             status : "404",
-            message : "Theater nt found",
+            message : "Theater not found",
             data: Theater
         });    
     }
@@ -51,7 +51,7 @@ router.post("/",asyncHandler( async (req, res) => {
             message : "Number Row and Number Column must be greater than 0"
         });
     }
-    if( typeTheater.includes(type)) {
+    if( !typeTheater.includes(type)) {
         res.status(400).json({
             status: "400",
             message : "Type is : '2d', '3d', '4dx'"

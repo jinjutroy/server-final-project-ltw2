@@ -10,11 +10,15 @@ const Ticket = sequelize.define("Ticket", {
   },
   booking_id: {
     type: Datatypes.UUID,
-    allowNull: true,
+    allowNull: false,
+  },
+  movie_id: {
+    type: Datatypes.INTEGER,
+    allowNull: false,
   },
   chair_id: {
     type: Datatypes.STRING,
-    allowNull: true,
+    allowNull: false,
     unique: false
   },
   address_x: {
@@ -37,6 +41,12 @@ Ticket.associate = function (models) {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
     as: 'booking'
+  });
+  Ticket.belongsTo(models.Movie, {
+    foreignKey: 'movie_id',
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+    as: 'movie'
   });
 }
 return Ticket;

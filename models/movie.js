@@ -38,6 +38,13 @@ module.exports = (sequelize, Datatypes) => {
     Movie.hasMany(models.Showtime, {
       foreignKey: 'movie_id'
     });
+    Movie.hasMany(models.Ticket, {
+      foreignKey: 'movie_id'
+    });
+  };
+  
+  Movie.findById = async function(id){
+    return Movie.findByPk(id);
   };
   return Movie;
 };
