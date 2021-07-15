@@ -8,7 +8,7 @@ const movie = require('../../models').Movie;
 
 
 router.get("/",asyncHandler( async (req, res) => {
-    var listTickets = await ticket.findAll();
+    var listTickets = await  ticket.findAll();
     res.status(200).json({
         status : "200",
         message : "Success",

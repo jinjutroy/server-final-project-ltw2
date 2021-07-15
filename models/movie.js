@@ -1,5 +1,4 @@
 
-const Utils = require("../utils/utils");
 module.exports = (sequelize, Datatypes) => {
   const Movie = sequelize.define("Movie", {
     name: {
@@ -21,9 +20,6 @@ module.exports = (sequelize, Datatypes) => {
     opening_day: {
       type: Datatypes.DATE,
       allowNull: true,
-      get: function () {
-        return Utils.formatDate(this.getDataValue('opening_day'))
-      }
     },
     minute_time: {
       type: Datatypes.INTEGER,
@@ -41,7 +37,7 @@ module.exports = (sequelize, Datatypes) => {
       unique: false
       } ,
       sourceKey: 'id',
-      as: 'showtimes'
+    as: 'showtimes'
     });
     //Movie.belongsToMany(models.Theater, { through: models.Showtime, foreignKey: 'movie_id' });
 

@@ -49,13 +49,13 @@ router.post('/lock', asyncHandler(async function (request, response) {
     const { listId } = request.body;
     if (listId) {
         let result = await lock_multiple(listId);
-        let new_list = await user.findAll({
+        let newUsers = await user.findAll({
             attributes: ['id','email','numphone','role','active','fullname']
           });
         if (result){            
             return response.status(200).send({ 
                 Status: 'Complete',
-                new_list:new_list});
+                data:newUsers});
         }
        
     }
@@ -67,13 +67,13 @@ router.post('/active', asyncHandler(async function (request, response) {
     const { listId } = request.body;
     if (listId) {
         let result = await active_multiple(listId);
-        let new_list = await user.findAll({
+        let newUsers = await user.findAll({
             attributes: ['id','email','numphone','role','active','fullname']
           });
         if (result){
             return response.status(200).send({ 
                 Status: 'Complete',
-                new_list:new_list
+                data:newUsers
             });
         }
 

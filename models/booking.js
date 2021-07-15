@@ -50,6 +50,5 @@ module.exports = (sequelize, Datatypes) => {
   Booking.findById = async function (id) {
     return Booking.findByPk(id);
   };
-
   return Booking;
 }

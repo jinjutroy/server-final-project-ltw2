@@ -6,11 +6,10 @@ const Movie = require('../../models').Movie;
 const Theater = require('../../models').Theater;
 const Showtime = require('../../models').Showtime;
 const Cinema = require('../../models').Cinema;
-router.post('/',asyncHandler(async function(request, response){
+router.get('/',asyncHandler(async function(request, response){
     const movie = await Movie.findAll({
-      opening_day: [
-        ['view', 'DESC'],
-    ],
+      where:{},
+       opening_day: ['view', 'DESC'],
     });
     const theater = await Theater.findAll();
     const showtime = await Showtime.findAll();
