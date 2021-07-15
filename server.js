@@ -34,6 +34,7 @@ const bookingRoute = require('./routers/booking/booking');
 const ticketRoute = require('./routers/ticket/ticket');
 const movieRoute = require('./routers/movie/movie');
 const userRoute = require('./routers/user/user');
+const showtimeRoute = require('./routers/showtime/showtime');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -61,6 +62,7 @@ app.use('/api/booking', bookingRoute);
 app.use('/api/ticket', ticketRoute);
 app.use('/api/movie', movieRoute);
 app.use('/api/user', userRoute);
+app.use('/api/showtime', showtimeRoute);
 
 app.use(( req, res, next) => {
   const err = new Error("Not found");

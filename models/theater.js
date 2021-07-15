@@ -49,10 +49,14 @@ Theater.associate = function (models) {
   //   as: 'showtimes'
   // });
   Theater.hasMany(models.Showtime, {
-    foreignKey: 'theater_id',
+    foreignKey: {name:'theater_id',
+                unique:false},
     sourceKey: 'id',
     as: 'showtimes'
   });
+  
+  //Theater.belongsToMany(models.Movie,{through:models.Showtime,foreignKey: 'theater_id'});
+
   Theater.findById = async function(id){
     return Theater.findByPk(id);
   };

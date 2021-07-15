@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "postgres",
-    "password": "thuan123",
-    "database": "doancuoiky",
+    "password": "2039",
+    "database": "ltw2",
     "port" : "5432",
     "dialect": "postgres"
   },

@@ -36,14 +36,17 @@ module.exports = (sequelize, Datatypes) => {
   })
   Movie.associate = function (models) {
     Movie.hasMany(models.Showtime, {
-      foreignKey: 'movie_id'
+      foreignKey:{
+      name: 'movie_id',
+      unique: false
+      } ,
+      sourceKey: 'id',
+      as: 'showtimes'
     });
-    Movie.hasMany(models.Ticket, {
-      foreignKey: 'movie_id'
-    });
+    //Movie.belongsToMany(models.Theater, { through: models.Showtime, foreignKey: 'movie_id' });
+
   };
-  
-  Movie.findById = async function(id){
+  Movie.findById = async function (id) {
     return Movie.findByPk(id);
   };
   return Movie;

@@ -6,7 +6,6 @@ const Movie = require('../../models').Movie;
 const Theater = require('../../models').Theater;
 const Showtime = require('../../models').Showtime;
 const Cinema = require('../../models').Cinema;
-const User = require('../../models').User;
 router.post('/',asyncHandler(async function(request, response){
     const movie = await Movie.findAll({
       opening_day: [

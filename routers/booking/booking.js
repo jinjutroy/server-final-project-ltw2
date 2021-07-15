@@ -32,7 +32,7 @@ router.get("/:id",asyncHandler( async (req, res) => {
     });
 }));
 router.post("/",asyncHandler( async (req, res) => {
-    const { list_Seat,location_Seat,movie_id,user_id,showtime_id,bookingtime }  = req.body;
+    const { list_Seat,location_Seat,user_id,showtime_id,bookingtime }  = req.body;
     if( location_Seat == 'null' || list_Seat == 'null' || user_id == "" || showtime_id == "" || bookingtime == "" ) {
         res.status(400).json({
             status : "400",
@@ -70,7 +70,6 @@ router.post("/",asyncHandler( async (req, res) => {
         for(let i=0; i < list_Seat.length; i++) {
                 await ticket.create({
                 booking_id: newBooking.id,
-                movie_id: movie_id,
                 chair_id: list_Seat[i],
                 address_x: location_Seat[list_Seat[i]][0],
                 address_y: location_Seat[list_Seat[i]][1],
