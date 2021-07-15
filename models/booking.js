@@ -17,7 +17,7 @@ module.exports = (sequelize, Datatypes) => {
       allowNull: false
     },
     bookingtime: {
-      type: Datatypes.STRING,
+      type: Datatypes.STRING(),
       allowNull: false
     },
     totalprice: {
@@ -47,6 +47,9 @@ module.exports = (sequelize, Datatypes) => {
       as: 'tickets'
     });
   }
+  Booking.findById = async function (id) {
+    return Booking.findByPk(id);
+  };
 
   return Booking;
 }

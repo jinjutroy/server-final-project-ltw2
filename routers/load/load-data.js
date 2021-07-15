@@ -24,16 +24,5 @@ router.post('/',asyncHandler(async function(request, response){
     }
      
   }));
-  router.post('/user',asyncHandler(async function(request, response){
-    const user = await User.findAll({
-      attributes: ['id','email','numphone','role','active','fullname']
-    });
-    if(user){
-        return response.status(200).send( { Status: 'Complete',
-                                            user: user});
-    }else{
-      return response.status(400).send({ Status:'Error.'});
-    }
-     
-  }));
+ 
 module.exports = router;

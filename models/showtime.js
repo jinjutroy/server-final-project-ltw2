@@ -77,6 +77,9 @@ Showtime.associate = function (models) {
         onUpdate: "CASCADE",
         as: 'movie'
     });
+    Showtime.findById = async function(id){
+        return Showtime.findByPk(id);
+    };
 };
 return Showtime;
 };

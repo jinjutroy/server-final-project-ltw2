@@ -38,7 +38,12 @@ router.post('/', asyncHandler(async function (request, response) {
         console.log(request.body);
         const user = await User.create({
             fullname: fullname, numphone:
-                phone, gender, email: email, password: bcrypt.hashSync(password, 10), role: role, token: token, active: false
+                phone, gender, 
+                email: email, 
+                password: bcrypt.hashSync(password, 10), 
+                role: role, 
+                token: token, 
+                active: false
         });
         //console.log(bcrypt.hashSync('123456',10));
         if (user) {

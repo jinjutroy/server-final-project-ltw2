@@ -49,5 +49,9 @@ Ticket.associate = function (models) {
     as: 'movie'
   });
 }
+
+Ticket.findById = async function(id){
+  return Ticket.findByPk(id);
+};
 return Ticket;
 };

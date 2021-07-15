@@ -10,7 +10,7 @@ router.get("/",asyncHandler( async (req, res) => {
     var listTheater = await theater.findAll();
     res.status(200).json({
         status : "200",
-        message : "ok",
+        message : "Success",
         data: listTheater || []
     });
 }));
@@ -25,7 +25,7 @@ router.get("/:id",asyncHandler( async (req, res) => {
     }
     res.status(200).json({
         status : "200",
-        message : "ok",
+        message : "Success",
         data: Theater
     });
 }));
@@ -51,7 +51,7 @@ router.post("/",asyncHandler( async (req, res) => {
             message : "Number Row and Number Column must be greater than 0"
         });
     }
-    if( !typeTheater.includes(type)) {
+    if(!typeTheater.includes(type)) {
         res.status(400).json({
             status: "400",
             message : "Type is : '2d', '3d', '4dx'"
@@ -72,7 +72,7 @@ router.post("/",asyncHandler( async (req, res) => {
     }
     res.status(200).json({
         status : "200",
-        message : "OK",
+        message : "Success",
         id: newTheater.id
     });
 }));

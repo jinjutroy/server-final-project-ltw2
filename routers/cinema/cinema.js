@@ -6,35 +6,42 @@ const cinema = require('../../models').Cinema;
 
 
 router.get("/",asyncHandler( async (req, res) => {
-    var listCinema = await cinema.findAll();
+    let listCinema = await cinema.findAll();
     res.status(200).json({
         status : "200",
-        message : "ok",
+        message : "Success",
         data: listCinema || []
     });
 }));
+
 router.get("/:id",asyncHandler( async (req, res) => {
-    var Cinema = await cinema.findById(req.params.id);
-    if( !Cinema) {
+    let Cinema = await cinema.findById(req.params.id);
+    if(!Cinema) {
         res.status(404).json({
             status : "404",
             message : "Cinema not found",
-            data: Cinema
+            data: Cinema|| []
         });    
     }
     res.status(200).json({
         status : "200",
-        message : "ok",
+        message : "Success",
         data: Cinema
     });
 }));
 router.post("/",asyncHandler( async (req, res) => {
     const { name, address }  = req.body;
-    const typeTheater = ['2d', '3d', '4dx'];
     if( name == "" || address == "" ) {
         res.status(400).json({
             status : "400",
             message : "Not enough information"
+        });
+    }
+    const findCinema = await cinema.findOne({where: {name:name}});
+    if(findCinema && name == findCinema.name || findCinema &&  address == findCinema.address ) {
+        res.status(400).json({
+            status : "400",
+            message : "Duplicate information"
         });
     }
     const newCinema = await cinema.create({
@@ -49,7 +56,7 @@ router.post("/",asyncHandler( async (req, res) => {
     }
     res.status(200).json({
         status : "200",
-        message : "OK",
+        message : "Success",
         id: newCinema.id
     });
 }));

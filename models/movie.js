@@ -15,7 +15,7 @@ module.exports = (sequelize, Datatypes) => {
       allowNull: true,
     },
     introduce: {
-      type: Datatypes.TEXT,
+      type: Datatypes.STRING,
       allowNull: true,
     },
     opening_day: {
