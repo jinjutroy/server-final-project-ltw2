@@ -24,6 +24,11 @@ module.exports = (sequelize, Datatypes) => {
       type: Datatypes.INTEGER,
       allowNull: false
     },
+    paid: {
+      type: Datatypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
   });
 
   Booking.associate = function(models) {
