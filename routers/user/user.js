@@ -21,11 +21,11 @@ router.get('/',asyncHandler(async function(request, response){
     });
      
   }));
-const lock_multiple = (list) => {
+const lock_multiple = async(list) => {
     let temp ;
     for (let i = 0; i < list.length; i++) {
         let id = list[i];
-        temp =  user.update({ role: 'lock' , active: false}, {
+        temp = await user.update({ role: 'lock' , active: false}, {
             where: {
                 id: id
             }
@@ -33,11 +33,11 @@ const lock_multiple = (list) => {
     }
     return temp;
 }
-const active_multiple = (list) => {
+const active_multiple = async(list) => {
     let temp ;
     for (let i = 0; i < list.length; i++) {
         let id = list[i];
-        temp =  user.update({ role: 'user' , active: true}, {
+        temp =  await user.update({ role: 'user' , active: true}, {
             where: {
                 id: id
             }

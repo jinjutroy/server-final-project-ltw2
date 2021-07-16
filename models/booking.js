@@ -1,4 +1,5 @@
 
+const Utils = require("../utils/utils");
 module.exports = (sequelize, Datatypes) => {
   var Booking = sequelize.define("Booking", {
     id: {
@@ -16,10 +17,14 @@ module.exports = (sequelize, Datatypes) => {
       type: Datatypes.INTEGER,
       allowNull: false
     },
-    bookingtime: {
-      type: Datatypes.STRING(),
-      allowNull: false
-    },
+    bookingtime:{
+    type: Datatypes.DATE,
+    allowNull: true,
+    validate: { },
+        get: function () {
+            return Utils.formatDate(this.getDataValue('bookingtime'))
+        }
+      } ,
     totalprice: {
       type: Datatypes.INTEGER,
       allowNull: false
@@ -28,7 +33,7 @@ module.exports = (sequelize, Datatypes) => {
       type: Datatypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
-    },
+    }
   });
 
   Booking.associate = function(models) {
