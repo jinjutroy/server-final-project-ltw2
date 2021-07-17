@@ -13,8 +13,48 @@ router.get("/",asyncHandler( async (req, res) => {
         data: listMovies || []
     });
 }));
-router.get("/:id",asyncHandler( async (req, res) => {
+router.get("/found/:id",asyncHandler( async (req, res) => {
     var Movie = await movie.findById(req.params.id);
+    if( !Movie) {
+        res.status(404).json({
+            status : "404",
+            message : "Movie not found",
+            data: Movie || []
+        });
+    }
+    res.status(200).json({
+        status : "200",
+        message : "Success",
+        data: Movie
+    });
+}));
+
+router.get("/top_view",asyncHandler( async (req, res) => {
+    var Movie = await movie.findAll({
+        where:{},
+        order:[
+            ["view","DESC"]
+        ],limit: 9
+    });
+    if( !Movie) {
+        res.status(404).json({
+            status : "404",
+            message : "Movie not found",
+            data: Movie || []
+        });
+    }
+    res.status(200).json({
+        status : "200",
+        message : "Success",
+        data: Movie
+    });
+}));
+router.get("/open_movie",asyncHandler( async (req, res) => {
+    var Movie = await movie.findAll({
+        order:[
+            ["opening_day","DESC"]
+        ],limit: 9
+    }); 
     if( !Movie) {
         res.status(404).json({
             status : "404",

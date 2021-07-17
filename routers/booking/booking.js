@@ -6,6 +6,7 @@ const booking = require('../../models').Booking;
 const ticket = require('../../models').Ticket;
 const showtime = require('../../models').Showtime;
 const user = require('../../models').User;
+const theater = require('../../models').Theater;
 
 
 router.get("/",asyncHandler( async (req, res) => {
@@ -58,11 +59,12 @@ router.get("/history/:user",asyncHandler( async (req, res) => {
             [
                 {
                 model: ticket, as: "tickets",
-                attributes: ["chair_id","price"]
+                attributes: ["chair_id","price"],
                 },
                 {
                 model: showtime, as: "showtime",
-                attributes: ["id", "movie_id","theater_id"]
+                attributes: ["id", "movie_id","theater_id"],
+                include: [{model: theater, as: "theater"}]
                 }
             ],
     });
