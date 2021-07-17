@@ -14,7 +14,7 @@ router.post('/', asyncHandler(async function (request, response) {
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
-        secure: false,
+        secure: true,
         auth: {
             user: process.env.EMAIL,
             pass: process.env.PASSWORD
@@ -22,7 +22,7 @@ router.post('/', asyncHandler(async function (request, response) {
     });
 
     const info = await transporter.sendMail({
-        from: 'CCG Cinema<buingocyen055@gmail.com>',
+        from: 'CCG Cinema ✔ <buingocyen055@gmail.com>',
         to: email,
         subject: "Sign up Account",
         html: `Account verification code: <b><h2>${token}</h2></b><br> You have to take one more step before you can create an account to log in! `
