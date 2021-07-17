@@ -22,7 +22,7 @@ router.post('/', asyncHandler(async function (request, response) {
         }
     });
 
-    const info = await transporter.sendMail({
+        await transporter.sendMail({
         from: 'CCG Cinema ✔ <buingocyen055@gmail.com>',
         to: email,
         subject: "Sign up Account",
