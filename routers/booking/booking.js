@@ -17,7 +17,40 @@ router.get("/",asyncHandler( async (req, res) => {
         data: listBookings || []
     });
 }));
-const date  = new Date();
+router.get("/chair",asyncHandler( async (req, res) => {
+    var listBookings = await booking.findAll( { 
+        where: {
+            paid: true
+        },
+        attributes: ["id"]
+        ,
+        include:
+            [
+                {
+                model: ticket, as: "tickets",
+                attributes: ["chair_id","address_x","address_y"],
+                },
+                {
+                model: showtime, as: "showtime",
+                attributes: ["id", "movie_id"],
+                where: {
+                    movie_id: req.query.movie}
+                }
+            ],
+    });
+    if( !listBookings) {
+        res.status(404).json({
+            status : "404",
+            message : "Booking not found",
+            data: listBookings || []
+        });
+    }
+    res.status(200).json({
+        status : "200",
+        message : "Success",
+        data: listBookings
+    });
+}));
 router.get("/:user",asyncHandler( async (req, res) => {
     var listBookings = await booking.findAll( { 
         where: {

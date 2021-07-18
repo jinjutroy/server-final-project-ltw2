@@ -15,6 +15,26 @@ router.get("/",asyncHandler( async (req, res) => {
         data: listShowtimes || []
     });
 }));
+router.get("/movie",asyncHandler( async (req, res) => {
+    var Showtime = await showtime.findAll({
+        where:{
+               movie_id : req.query.movie,
+               theater_id : req.query.theater
+        }
+    });
+    if( !Showtime) {
+        res.status(404).json({
+            status : "404",
+            message : "Showtime not found",
+            data: Showtime || []
+        });
+    }
+    res.status(200).json({
+        status : "200",
+        message : "Success",
+        data: Showtime
+    });
+}));
 router.get("/:id",asyncHandler( async (req, res) => {
     var Showtime = await showtime.findById(req.params.id);
     if( !Showtime) {
@@ -32,7 +52,7 @@ router.get("/:id",asyncHandler( async (req, res) => {
 }));
 router.post("/",asyncHandler( async (req, res) => {
     const {movie_id,theater_id,start_time,end_time,price}  = req.body;
-    if( movie_id == '' || theater_id == '' || start_time == null || end_time == null || price == "" ) {
+    if( movie_id == '' || theater_id == '' || start_time == "" || end_time == "" || price == "" ) {
         res.status(400).json({
             status : "400",
             message : "Not enough information"
@@ -69,7 +89,7 @@ router.post("/",asyncHandler( async (req, res) => {
     res.status(200).json({
         status : "200",
         message : "OK",
-        id: newShowtime.id
+       id: newShowtime.id
     });
 }));
 
