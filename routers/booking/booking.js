@@ -9,6 +9,7 @@ const showtime = require('../../models').Showtime;
 const user = require('../../models').User;
 const theater = require('../../models').Theater;
 const cinema = require('../../models').Cinema;
+const movie = require('../../models').Movie;
 
 
 router.get("/",asyncHandler( async (req, res) => {
@@ -70,6 +71,55 @@ router.post("/cinema",asyncHandler( async (req, res) => {
         status : "200",
         message : "Success",
         data: listBookings
+    });
+}));
+
+// SELECT m.id,m.name, SUM(t.price)as total 
+// FROM "Movies" as m 
+// JOIN "Showtimes" as s ON s.movie_id = m.id 
+// JOIN "Bookings" as b ON b.showtime_id = s.id 
+// JOIN "Tickets" as t ON t.booking_id = b.id 
+// GROUP BY m.id 
+// ORDER BY total DESC
+router.post("/movie",asyncHandler( async (req, res) => {
+    const {dateStart, dateEnd} = req.body;
+    if(dateStart == '' || dateEnd == ''){
+        res.status(404).json({
+            status : "404",
+            message : "Not enough information",
+        });
+    }
+    const startedDate = new Date(dateStart);
+    const endDate = new Date(dateEnd);
+    //[sequelize.fn('SUM', sequelize.col('tickets.price')), 'total'],
+    var listMovies = await booking.findAll( { 
+        where: {
+            paid: true,
+            bookingtime :{[Op.between] : [startedDate , endDate ]}
+        },
+        attributes:["id",[sequelize.fn('SUM', sequelize.col('tickets.price')), 'total'],[sequelize.fn('COUNT', sequelize.col('tickets.id')), 'count']],
+        include: [
+            {
+                model: showtime, as: "showtime",
+                attributes: ['movie_id'],
+                include: [{
+                    model: movie, as : 'movie',
+                    attributes: ["id",'name',"view"]
+                }],
+            },{
+                model: ticket, as: "tickets",
+                attributes: []
+            }
+        ],
+        group: ["showtime->movie.id","showtime->movie.view" ,"showtime.id","Booking.id"],
+        order: [
+            [sequelize.fn('SUM', sequelize.col('tickets.price')), 'DESC'],
+        ],
+    });
+    res.status(200).json({
+        status : "200",
+        message : "Success",
+        data: listMovies || []
     });
 }));
 router.get("/chair",asyncHandler( async (req, res) => {

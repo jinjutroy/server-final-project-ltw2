@@ -1,6 +1,5 @@
 const express = require('express');
 const asyncHandler = require('express-async-handler')
-
 const router = express.Router();
 const movie = require('../../models').Movie;
 
@@ -98,7 +97,8 @@ router.post("/",asyncHandler( async (req, res) => {
         id: newMovie.id
     });
 }));
-router.post("/:id",asyncHandler( async (req, res) => {
+router.get("/:id",asyncHandler( async (req, res) => {
+    //tim phim lay view roi update + 1
     const { view }  = req.body;
     if( view == '' ) {
         res.status(400).json({
