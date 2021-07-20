@@ -2,19 +2,20 @@ module.exports = (sequelize, Datatypes) => {
 
   const Cinema = sequelize.define("Cinema", {
     name: {
-      type: Datatypes.STRING(),
+      type: Datatypes.STRING,
       allowNull: false,
+      unique: true
     },
     address: {
-      type: Datatypes.STRING(150),
+      type: Datatypes.STRING,
       allowNull: true
     }
   });
-  Cinema.associate = function (models) {
+  Cinema.associate = function (models) { 
     Cinema.hasMany(models.Theater, {
       foreignKey: 'cinema_id',
       sourceKey: 'id',
-      as: 'theaters'
+      as: 'theater'
     });
   };
   Cinema.findById = async function (id) {

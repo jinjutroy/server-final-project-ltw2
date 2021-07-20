@@ -46,7 +46,7 @@ router.post("/",asyncHandler( async (req, res) => {
     }
     const newCinema = await cinema.create({
         name: name,
-        address: address
+        address: address,
     });
     if( !newCinema) {
         res.status(400).json({

@@ -1,12 +1,14 @@
 const express = require('express');
 const asyncHandler = require('express-async-handler')
-
+var sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const router = express.Router();
 const booking = require('../../models').Booking;
 const ticket = require('../../models').Ticket;
 const showtime = require('../../models').Showtime;
 const user = require('../../models').User;
 const theater = require('../../models').Theater;
+const cinema = require('../../models').Cinema;
 
 
 router.get("/",asyncHandler( async (req, res) => {
@@ -15,6 +17,59 @@ router.get("/",asyncHandler( async (req, res) => {
         status : "200",
         message : "Success",
         data: listBookings || []
+    });
+}));
+router.post("/cinema",asyncHandler( async (req, res) => {
+    const {dateStart, dateEnd} = req.body;
+    if(dateStart == '' || dateEnd == ''){
+        res.status(404).json({
+            status : "404",
+            message : "Not enough information",
+        });
+    }
+    const startedDate = new Date(dateStart);
+    const endDate = new Date(dateEnd);
+   // [Sequelize.literal('COUNT(DISTINCT(product))'), 'countOfProducts']
+
+    // SELECT b.id,COUNT(b.id),ci.name,s.price,SUM(t.price) as total FROM "Bookings" as b 
+    // JOIN "Showtimes" as s ON b.showtime_id = s.id 
+    // JOIN "Tickets" as t ON  b.id=t.booking_id
+    // JOIN "Theaters" as th ON th.id = s.theater_id 
+    // JOIN "Cinemas" as ci on ci.id = th.cinema_id 
+    // GROUP BY (ci.id,ci.name,b.id,s.price)
+    // ORDER BY total DESC
+    var listBookings = await booking.findAll( { 
+        where: {
+            paid: true,
+            bookingtime :{[Op.between] : [startedDate , endDate ]}
+        },
+        attributes:[[sequelize.fn('SUM', sequelize.col('tickets.price')), 'total'],[sequelize.fn('COUNT', sequelize.col('Booking.id')), 'count']],
+        include: [
+            {
+                model: showtime, as: "showtime",
+                include: [ {
+                    model: theater, as :"theater",
+                    attributes: ["cinema_id"],
+                    include: [{
+                        model: cinema, as: "cinema",
+                        attributes: ["id","name","address"]
+                    }],
+                }],
+                attributes: ["theater_id"],
+            },{
+                model: ticket, as: "tickets",
+                attributes: []
+            }
+        ],
+        group: ["showtime->theater->cinema.id","Booking.id","showtime.id","showtime->theater.id","tickets.price"],
+        order: [
+            [sequelize.fn('SUM', sequelize.col('tickets.price')), 'DESC'],
+        ],
+    });
+    res.status(200).send({
+        status : "200",
+        message : "Success",
+        data: listBookings
     });
 }));
 router.get("/chair",asyncHandler( async (req, res) => {
@@ -51,6 +106,7 @@ router.get("/chair",asyncHandler( async (req, res) => {
         data: listBookings
     });
 }));
+
 router.get("/:user",asyncHandler( async (req, res) => {
     var listBookings = await booking.findAll( { 
         where: {
