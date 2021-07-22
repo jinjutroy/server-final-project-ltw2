@@ -221,7 +221,7 @@ router.get("/history/:user",asyncHandler( async (req, res) => {
     });
 }));
 router.post("/",asyncHandler( async (req, res) => {
-    const { list_Seat,location_Seat,user_id,showtime_id,bookingtime }  = req.body;
+    const { list_Seat,location_Seat,user_id,showtime_id }  = req.body;
     if( location_Seat == 'null' || list_Seat == 'null' || user_id == "" || showtime_id == "" ) {
         res.status(400).json({
             status : "400",

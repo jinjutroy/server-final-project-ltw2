@@ -20,7 +20,10 @@ router.get("/movie",asyncHandler( async (req, res) => {
         where:{
                movie_id : req.query.movie,
                theater_id : req.query.theater
-        }
+        },
+        include: [{
+            model: theater, as: "theater",
+        }]
     });
     if( !Showtime) {
         res.status(404).json({
