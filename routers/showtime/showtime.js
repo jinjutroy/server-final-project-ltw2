@@ -55,10 +55,18 @@ router.get("/:id",asyncHandler( async (req, res) => {
 }));
 router.post("/",asyncHandler( async (req, res) => {
     const {movie_id,theater_id,start_time,end_time,price}  = req.body;
-    if( movie_id == '' || theater_id == '' || start_time == "" || end_time == "" || price == "" ) {
+    const timeStart =new Date(start_time).getTime();
+    const timeEnd = new Date(end_time).getTime();
+    if( movie_id == '' || theater_id == '' || start_time == "" || end_time == "" || price == ""  ) {
         res.status(400).json({
             status : "400",
             message : "Not enough information"
+        });
+    }
+    if( timeStart> timeEnd||timeEnd-timeStart  === 0) {
+        res.status(400).json({
+            status : "400",
+            message : "Time wrong !!"
         });
     }
     const foundMovie = await movie.findById(movie_id);
