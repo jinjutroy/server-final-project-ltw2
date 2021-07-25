@@ -2,3 +2,5 @@
 NODE_ENV=development
 DOMAIN_URL=http://localhost:
 PORT=9080
+EMAIL=
+PASSWORD=
