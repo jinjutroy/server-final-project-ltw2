@@ -55,6 +55,7 @@ router.get("/:id",asyncHandler( async (req, res) => {
 }));
 router.post("/",asyncHandler( async (req, res) => {
     const {movie_id,theater_id,start_time,end_time,price}  = req.body;
+    console.log("🚀 ~ file: showtime.js ~ line 58 ~ router.post ~ req.body", req.body)
     const timeStart =new Date(start_time).getTime();
     const timeEnd = new Date(end_time).getTime();
     if( movie_id == '' || theater_id == '' || start_time == "" || end_time == "" || price == ""  ) {
@@ -83,12 +84,16 @@ router.post("/",asyncHandler( async (req, res) => {
             message : "Can not find the theater"
         });
     }
+    let parsePrice = parseInt(price);
+    let stime = new Date(start_time);
+    let etime = new Date(end_time);
+    console.log("🚀 ~ file: showtime.js ~ line 90 ~ router.post ~ etime", new Date())
     const newShowtime = await showtime.create({
         movie_id: movie_id,
         theater_id: theater_id,
-        start_time: start_time,
-        end_time: end_time,
-        price: price
+        start_time: stime,
+        end_time: etime,
+        price: parsePrice,
     });
     if( !newShowtime) {
         res.status(400).json({

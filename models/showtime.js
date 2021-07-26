@@ -4,8 +4,7 @@ module.exports = (sequelize, Datatypes) => {
 const Showtime = sequelize.define("Showtime", {
     id: {
         type: Datatypes.INTEGER,
-        autoIncrement: true,
-        unique: true,
+        autoIncrement: true,    
         primaryKey: true,
         allowNull: false,
         validate: {
