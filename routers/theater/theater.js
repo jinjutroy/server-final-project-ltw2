@@ -45,6 +45,12 @@ router.post("/",asyncHandler( async (req, res) => {
             message : "Can not find the cinema"
         });
     }
+    if( Number(number_row) > 24 || Number(number_column) > 24) {
+        res.status(400).json({
+            status : "400",
+            message : "Row Number and Column Number must be less than 24"
+        });
+    }
     if( Number(number_row) <= 0 || Number(number_column) <= 0) {
         res.status(400).json({
             status : "400",

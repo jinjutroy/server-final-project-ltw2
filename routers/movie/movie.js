@@ -27,46 +27,6 @@ router.get("/found/:id",asyncHandler( async (req, res) => {
         data: Movie
     });
 }));
-
-router.get("/top_view",asyncHandler( async (req, res) => {
-    var Movie = await movie.findAll({
-        where:{},
-        order:[
-            ["view","DESC"]
-        ],limit: 9
-    });
-    if( !Movie) {
-        res.status(404).json({
-            status : "404",
-            message : "Movie not found",
-            data: Movie || []
-        });
-    }
-    res.status(200).json({
-        status : "200",
-        message : "Success",
-        data: Movie
-    });
-}));
-router.get("/open_movie",asyncHandler( async (req, res) => {
-    var Movie = await movie.findAll({
-        order:[
-            ["opening_day","DESC"]
-        ],limit: 9
-    }); 
-    if( !Movie) {
-        res.status(404).json({
-            status : "404",
-            message : "Movie not found",
-            data: Movie || []
-        });
-    }
-    res.status(200).json({
-        status : "200",
-        message : "Success",
-        data: Movie
-    });
-}));
 router.post("/",asyncHandler( async (req, res) => {
     const { name , image , trailer, introduce, opening_day, minute_time}  = req.body;
     console.log(req.body)
@@ -98,15 +58,14 @@ router.post("/",asyncHandler( async (req, res) => {
     });
 }));
 router.get("/:id",asyncHandler( async (req, res) => {
-    //tim phim lay view roi update + 1
-    const { view }  = req.body;
-    if( view == '' ) {
+    const id = req.params.id;
+    if( id == '' ) {
         res.status(400).json({
             status : "400",
             message : "Not enough information"
         });
     }
-    const foundMovie = await movie.findById(req.params.id);
+    const foundMovie = await movie.findById(id);
     if(!foundMovie){
         res.status(404).json({
             status : "404",
@@ -114,9 +73,9 @@ router.get("/:id",asyncHandler( async (req, res) => {
             data: foundMovie || []
         });
     }
-    const updateMovie = await movie.update({ view: view }, {
+    const updateMovie = await movie.update({ view: foundMovie.view + 1 }, {
         where: {
-          id: req.params.id
+          id: id
         }})
     if( !updateMovie) {
         res.status(400).json({
@@ -126,8 +85,7 @@ router.get("/:id",asyncHandler( async (req, res) => {
     }
     res.status(200).json({
         status : "200",
-        message : "Success",
-        id: newMovie.id
+        message : "Success"
     });
 }));
 module.exports = router;
