@@ -9,13 +9,11 @@ router.post('/', asyncHandler(async function (request, response) {
   const found = await User.findByEmail(email);
   if (found) {
     if (found.active === true && bcrypt.compareSync(password, found.password)) {
-      console.log('Complete');
       return response.status(200).send({
         Status: 'Complete',
         user: found.dataValues
       });
     } if (found.active === true && !bcrypt.compareSync(password, found.password)) {
-      console.log('Password wrong!');
       return response.status(400).send({ Status: "Password wrong!" });
     }
     else if (found.active === false) {

@@ -2,6 +2,9 @@ const express = require('express');
 const asyncHandler = require('express-async-handler')
 const router = express.Router();
 const movie = require('../../models').Movie;
+const showtime = require('../../models').Showtime;
+const theater = require('../../models').Theater;
+var sequelize = require('sequelize');
 
 
 router.get("/",asyncHandler( async (req, res) => {
@@ -12,8 +15,23 @@ router.get("/",asyncHandler( async (req, res) => {
         data: listMovies || []
     });
 }));
-router.get("/found/:id",asyncHandler( async (req, res) => {
-    var Movie = await movie.findById(req.params.id);
+router.get("/foundTheater/:id",asyncHandler( async (req, res) => {
+    var Movie = await showtime.findAll({
+     attributes: ["theater_id"],
+     include: [{
+         model: theater, as: "theater",
+         attributes: ["id","name"],
+     },
+     {
+        model: movie, as: "movie",
+        attributes: [],
+        where:{
+           id : req.params.id
+       },
+    }],  
+        
+     group: ["theater_id","theater.id" ]
+    });
     if( !Movie) {
         res.status(404).json({
             status : "404",
@@ -25,36 +43,6 @@ router.get("/found/:id",asyncHandler( async (req, res) => {
         status : "200",
         message : "Success",
         data: Movie
-    });
-}));
-router.post("/",asyncHandler( async (req, res) => {
-    const { name , image , trailer, introduce, opening_day, minute_time}  = req.body;
-    console.log(req.body)
-    if( name == '' || image == '' || introduce == "" || opening_day == null || minute_time == "" ) {
-        res.status(400).json({
-            status : "400",
-            message : "Not enough information"
-        });
-    }
-    const newMovie = await movie.create({
-        name: name,
-        image: image,
-        trailer: trailer,
-        introduce: introduce,
-        opening_day:opening_day,
-        minute_time:minute_time,
-        view:0
-    });
-    if( !newMovie) {
-        res.status(400).json({
-            status : "400",
-            message : "Something Wrong!!! try again"
-        });
-    }
-    res.status(200).json({
-        status : "200",
-        message : "OK",
-        id: newMovie.id
     });
 }));
 router.get("/:id",asyncHandler( async (req, res) => {
@@ -86,6 +74,36 @@ router.get("/:id",asyncHandler( async (req, res) => {
     res.status(200).json({
         status : "200",
         message : "Success"
+    });
+}));
+router.post("/",asyncHandler( async (req, res) => {
+    const { name , image , trailer, introduce, opening_day, minute_time}  = req.body;
+    console.log(req.body)
+    if( name == '' || image == '' || introduce == "" || opening_day == null || minute_time == "" ) {
+        res.status(400).json({
+            status : "400",
+            message : "Not enough information"
+        });
+    }
+    const newMovie = await movie.create({
+        name: name,
+        image: image,
+        trailer: trailer,
+        introduce: introduce,
+        opening_day:opening_day,
+        minute_time:minute_time,
+        view:0
+    });
+    if( !newMovie) {
+        res.status(400).json({
+            status : "400",
+            message : "Something Wrong!!! try again"
+        });
+    }
+    res.status(200).json({
+        status : "200",
+        message : "OK",
+        id: newMovie.id
     });
 }));
 module.exports = router;

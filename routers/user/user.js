@@ -4,6 +4,32 @@ const router = express.Router();
 const user = require('../../models').User;
 
 
+router.get('/:id',asyncHandler(async function(request, response){
+    const User = await user.findById(request.params.id);
+    let isAdmin = false;
+    if(!User){
+        response.status(400).json({
+            status : "400",
+            message : "Something Wrong!!! try again"
+        });
+    }
+    if(User.role === "staff"){
+        isAdmin === true;
+    }
+    const data = {
+        id: User.id,
+        email: User.email,
+        fullname: User.fullname,
+        active: User.active,
+        isAdmin: isAdmin
+    }
+    response.status(200).json({
+        status : "200",
+        message : "Success",
+        data: data || []
+    });
+     
+  }));
 router.get('/',asyncHandler(async function(request, response){
     const User = await user.findAll({
       attributes: ['id','email','numphone','role','active','fullname']
