@@ -5,6 +5,8 @@ const router = express.Router();
 const showtime = require('../../models').Showtime;
 const theater = require('../../models').Theater;
 const movie = require('../../models').Movie;
+const booking = require('../../models').Booking;
+const ticket = require('../../models').Ticket;
 
 
 router.get("/",asyncHandler( async (req, res) => {
@@ -38,6 +40,41 @@ router.get("/movie",asyncHandler( async (req, res) => {
         data: Showtime
     });
 }));
+router.get("/showtime/:id",asyncHandler( async (req, res) => {
+    var Showtime = await showtime.findAll({ 
+        where:{
+            id: req.params.id
+        },
+        attributes:["id","movie_id","theater_id"],
+        include:
+            [
+                {
+                    model: booking, as: "bookings",
+                    attributes: ["id"],
+                    include: [
+                        {
+                            model: ticket, as: "tickets",
+                            attributes: ["id","address_x","address_y"]
+                        }
+                    ]
+                }
+            ]
+    });
+
+    if( !Showtime) {
+        res.status(404).json({
+            status : "404",
+            message : "Showtime not found",
+            data: Showtime || []
+        });
+    }
+    res.status(200).json({
+        status : "200",
+        message : "Success",
+        data: Showtime
+    });
+}));
+
 router.get("/:id",asyncHandler( async (req, res) => {
     var Showtime = await showtime.findById(req.params.id);
     if( !Showtime) {

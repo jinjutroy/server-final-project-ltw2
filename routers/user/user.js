@@ -6,22 +6,30 @@ const user = require('../../models').User;
 
 router.get('/:id',asyncHandler(async function(request, response){
     const User = await user.findById(request.params.id);
-    let isAdmin = false;
     if(!User){
         response.status(400).json({
             status : "400",
             message : "Something Wrong!!! try again"
         });
     }
-    if(User.role === "staff"){
-        isAdmin === true;
-    }
-    const data = {
-        id: User.id,
-        email: User.email,
-        fullname: User.fullname,
-        active: User.active,
-        isAdmin: isAdmin
+    let data = {};
+    if (User.role === "staff") {
+        data = {
+            id: User.id,
+            email: User.email,
+            fullname: User.fullname,
+            active: User.active,
+            isAdmin: true
+        }
+    } else {
+        data = {
+            id: User.id,
+            email: User.email,
+            fullname: User.fullname,
+            active: User.active,
+            isAdmin: false
+        }
+
     }
     response.status(200).json({
         status : "200",
@@ -71,6 +79,36 @@ const active_multiple = async(list) => {
     }
     return temp;
 }
+const update_multiple = async(list) => {
+    let temp ;
+    for (let i = 0; i < list.length; i++) {
+        let id = list[i];
+        temp =  await user.update({ role: 'staff' , active: true}, {
+            where: {
+                id: id
+            }
+        })
+    }
+    return temp;
+}
+router.post('/update', asyncHandler(async function (request, response) {
+    const { listId } = request.body;
+    if (listId) {
+        let result = await update_multiple(listId);
+        let newUsers = await user.findAll({
+            attributes: ['id','email','numphone','role','active','fullname']
+          });
+        if (result){            
+            return response.status(200).send({ 
+                Status: 'Complete',
+                data:newUsers});
+        }
+       
+    }
+    else {
+        return response.status(400).send({ Status: 'Error' });
+    }
+}));
 router.post('/lock', asyncHandler(async function (request, response) {
     const { listId } = request.body;
     if (listId) {

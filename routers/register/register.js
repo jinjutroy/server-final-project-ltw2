@@ -8,7 +8,7 @@ require('dotenv').config({ path: '../../.env' });
 
 const User = require('../../models').User;
 router.post('/', asyncHandler(async function (request, response) {
-    let { fullname, phone, gender, email, password, role } = request.body;
+    let { fullname, phone, gender, email, password } = request.body;
     let token = randomstring.generate(7);
 
     const transporter = nodemailer.createTransport({
@@ -41,7 +41,7 @@ router.post('/', asyncHandler(async function (request, response) {
             numphone: phone, gender,
             email: email,
             password: bcrypt.hashSync(password, 10),
-            role: role,
+            role: "user",
             token: token,
             active: false
         });

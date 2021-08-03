@@ -43,16 +43,11 @@ Theater.associate = function (models) {
     onUpdate: "CASCADE",
     as: 'cinema'
   });
-  // Theater.belongsToMany(models.Showtime, {
-  //   foreignKey: 'theater_id',
-  //   sourceKey: 'id',
-  //   as: 'showtimes'
-  // });
   Theater.hasMany(models.Showtime, {
     foreignKey: {name:'theater_id',
                 unique:false},
     sourceKey: 'id',
-    as: 'showtimes'
+    as: 'showtime'
   });
   
   //Theater.belongsToMany(models.Movie,{through:models.Showtime,foreignKey: 'theater_id'});

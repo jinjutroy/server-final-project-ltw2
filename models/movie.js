@@ -33,11 +33,11 @@ module.exports = (sequelize, Datatypes) => {
   Movie.associate = function (models) {
     Movie.hasMany(models.Showtime, {
       foreignKey:{
-      name: 'movie_id',
-      unique: false
+        name: 'movie_id',
+        unique: false
       } ,
       sourceKey: 'id',
-    as: 'showtimes'
+    as: 'showtime'
     });
     //Movie.belongsToMany(models.Theater, { through: models.Showtime, foreignKey: 'movie_id' });
 
