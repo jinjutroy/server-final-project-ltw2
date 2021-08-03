@@ -100,7 +100,7 @@ router.post("/",asyncHandler( async (req, res) => {
             message : "Not enough information"
         });
     }
-    if( timeStart> timeEnd||timeEnd-timeStart  === 0) {
+    if(timeStart > timeEnd ) {
         res.status(400).json({
             status : "400",
             message : "Time wrong !!"

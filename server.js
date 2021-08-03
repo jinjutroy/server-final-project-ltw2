@@ -10,8 +10,8 @@ const DOMAIN_URL = process.env.DOMAIN_URL;
 const PORT = process.env.PORT; 
 
 //app.use(cors())
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ extended: true,limit: '50mb' }));
 app.use(morgan('dev'));
 
 
@@ -36,6 +36,7 @@ const movieRoute = require('./routers/movie/movie');
 const userRoute = require('./routers/user/user');
 const showtimeRoute = require('./routers/showtime/showtime');
 
+//Set Request Size Limit
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

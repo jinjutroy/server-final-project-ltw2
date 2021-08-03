@@ -78,19 +78,22 @@ router.get("/:id",asyncHandler( async (req, res) => {
 }));
 router.post("/",asyncHandler( async (req, res) => {
     const { name , image , trailer, introduce, opening_day, minute_time}  = req.body;
-    console.log(req.body)
-    if( name == '' || image == '' || introduce == "" || opening_day == null || minute_time == "" ) {
+
+    const open = new Date(opening_day);
+    if( name == '' || image == '' || introduce == "" || minute_time == "" ) {
         res.status(400).json({
             status : "400",
             message : "Not enough information"
         });
     }
+    console.log("🚀 ~ file: movie.js ~ line 81 ~ router.post ~ name , image , trailer, introduce, opening_day, minute_time", name , trailer, introduce, opening_day, minute_time)
+
     const newMovie = await movie.create({
         name: name,
         image: image,
         trailer: trailer,
         introduce: introduce,
-        opening_day:opening_day,
+        opening_day:open,
         minute_time:minute_time,
         view:0
     });
@@ -102,7 +105,7 @@ router.post("/",asyncHandler( async (req, res) => {
     }
     res.status(200).json({
         status : "200",
-        message : "OK",
+        message : "Success",
         id: newMovie.id
     });
 }));
