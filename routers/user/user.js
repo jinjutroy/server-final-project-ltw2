@@ -36,7 +36,6 @@ router.get('/:id',asyncHandler(async function(request, response){
         message : "Success",
         data: data || []
     });
-    console.log("🚀 ~ file: user.js ~ line 16 ~ router.get ~ data", data)
      
   }));
 router.get('/',asyncHandler(async function(request, response){

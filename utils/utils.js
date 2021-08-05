@@ -1,3 +1,6 @@
+
+const nodemailer = require('nodemailer');
+
 class Utils {
     static formatDate(date) {
         if (typeof date === 'undefined') {
@@ -20,7 +23,8 @@ class Utils {
         var result = `${dd}/${mmm}/${yyyy} ${hh}:${mm}` 
         return result
     }
-
+    
+    
     static dateParse(str) {
         if (typeof str === 'undefined') {
             return str;

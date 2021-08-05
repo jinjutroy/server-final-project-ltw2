@@ -5,6 +5,7 @@ const router = express.Router();
 const randomstring = require("randomstring");
 const nodemailer = require('nodemailer');
 require('dotenv').config({ path: '../../.env' });
+const { transporter } = require('../../utils/utils');
 
 const User = require('../../models').User;
 router.post('/', asyncHandler(async function (request, response) {
@@ -21,7 +22,6 @@ router.post('/', asyncHandler(async function (request, response) {
             pass: process.env.PASSWORD
         }
     });
-
         await transporter.sendMail({
         from: 'CCG Cinema ✔ <buingocyen055@gmail.com>',
         to: email,
@@ -32,7 +32,6 @@ router.post('/', asyncHandler(async function (request, response) {
      // Create a new user
     const found = await User.findByEmail(email);
     if (found) {
-        console.log('User is exist');
         return response.status(400).send({ Status: 'Email is exist' });
     }
     else {

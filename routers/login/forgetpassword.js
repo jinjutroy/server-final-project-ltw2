@@ -32,7 +32,6 @@ router.post('/', asyncHandler(async function (req, res) {
     if (token) {
         const user = await User.findOne({ where: { email: email } });
         if (user) {
-            console.log(user);
             await User.update({ token: token }, {
                 where: {
                     email: email

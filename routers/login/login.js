@@ -20,7 +20,6 @@ router.post('/', asyncHandler(async function (request, response) {
       return response.status(400).send({ Status: 'Please active acc!' });
     }
   } else {
-    console.log('Not found');
     return response.status(400).send({ Status: 'Email is not exist.' });
   }
 
