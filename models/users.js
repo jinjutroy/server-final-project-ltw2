@@ -12,17 +12,21 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
+    googleId: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
     fullname: {
       type: DataTypes.STRING(50),
       allowNull: false,
     },
     numphone:{
       type: DataTypes.STRING(20),
-      allowNull: false,
+      allowNull: true,
     },
     gender: {
       type: DataTypes.STRING(7),
-      allowNull: false,
+      allowNull: true,
     },
     role: {
       type: DataTypes.STRING(7),
@@ -44,6 +48,14 @@ const User = sequelize.define('User', {
         as: 'booking'
       });
     };
+
+    User.findByGoogleId = async function(googleId){
+      return User.findOne({
+          where:{
+                googleId,
+            },
+        }); 
+      };
     User.findByEmail = async function(email){
     return User.findOne({
         where:{

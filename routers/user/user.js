@@ -91,6 +91,7 @@ const update_multiple = async(list) => {
     }
     return temp;
 }
+
 router.post('/update', asyncHandler(async function (request, response) {
     const { listId } = request.body;
     if (listId) {
@@ -118,7 +119,7 @@ router.post('/lock', asyncHandler(async function (request, response) {
           });
         if (result){            
             return response.status(200).send({ 
-                Status: 'Complete',
+                message: 'Complete',
                 data:newUsers});
         }
        

@@ -33,33 +33,28 @@ router.post("/",asyncHandler( async (req, res) => {
     const { name, cinema_id, type,  number_row, number_column }  = req.body;
     const typeTheater = ['2d', '3d', '4dx'];
     if( name == "" || cinema_id == "" || type == "" || number_row == "" || number_column == "") {
-        res.status(400).json({
-            status : "400",
+        res.status(400).json({ 
             message : "Not enough information"
         });
     }
     const foundCinema = await cinema.findById(cinema_id);
     if( !foundCinema) {
         res.status(400).json({
-            status : "400",
             message : "Can not find the cinema"
         });
     }
     if( Number(number_row) > 24 || Number(number_column) > 24) {
         res.status(400).json({
-            status : "400",
             message : "Row Number and Column Number must be less than 24"
         });
     }
     if( Number(number_row) <= 0 || Number(number_column) <= 0) {
         res.status(400).json({
-            status : "400",
             message : "Number Row and Number Column must be greater than 0"
         });
     }
     if(!typeTheater.includes(type)) {
         res.status(400).json({
-            status: "400",
             message : "Type is : '2d', '3d', '4dx'"
         });
     }
@@ -72,12 +67,10 @@ router.post("/",asyncHandler( async (req, res) => {
     });
     if( !newTheater) {
         res.status(400).json({
-            status : "400",
             message : "Something Wrong!!! try again"
         });
     }
     res.status(200).json({
-        status : "200",
         message : "Success",
         id: newTheater.id
     });

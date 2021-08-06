@@ -37,7 +37,8 @@ router.post('/', asyncHandler(async function (request, response) {
     else {
         const user = await User.create({
             fullname: fullname, 
-            numphone: phone, gender,
+            numphone: phone, 
+            gender: gender,
             email: email,
             password: bcrypt.hashSync(password, 10),
             role: "user",
