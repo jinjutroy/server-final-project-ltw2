@@ -25,7 +25,7 @@ router.post('/', asyncHandler(async function (req, res) {
         await transporter.sendMail({
         from: 'CCG Cinema ✔ <buingocyen055@gmail.com>',
         to: email,
-        subject: "Forget password CCG Cinema",
+        subject: "Change password CCG Cinema",
         html: `Account verification code: <b><h2>${token}</h2></b><br>You have to take one more step before you can change password!  `
     });
 
