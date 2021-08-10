@@ -1,21 +1,21 @@
-const express = require('express');
-const asyncHandler = require('express-async-handler')
-const sequelize = require('sequelize');
-const { Op } = require('sequelize');
-const hbs = require('nodemailer-express-handlebars');
-require('dotenv').config({ path: '../../.env' });
-const moment = require('moment-timezone');
+const express = require("express");
+const asyncHandler = require("express-async-handler")
+const sequelize = require("sequelize");
+const { Op } = require("sequelize");
+const hbs = require("nodemailer-express-handlebars");
+require("dotenv").config({ path: "../../.env" });
+const moment = require("moment-timezone");
 const router = express.Router();
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 
-const booking = require('../../models').Booking;
-const ticket = require('../../models').Ticket;
-const showtime = require('../../models').Showtime;
-const user = require('../../models').User;
-const theater = require('../../models').Theater;
-const cinema = require('../../models').Cinema;
-const movie = require('../../models').Movie;
+const booking = require("../../models").Booking;
+const ticket = require("../../models").Ticket;
+const showtime = require("../../models").Showtime;
+const user = require("../../models").User;
+const theater = require("../../models").Theater;
+const cinema = require("../../models").Cinema;
+const movie = require("../../models").Movie;
 
 router.get("/",asyncHandler( async (req, res) => {
     var listBookings = await booking.findAll();
@@ -27,7 +27,7 @@ router.get("/",asyncHandler( async (req, res) => {
 }));
 router.post("/cinema",asyncHandler( async (req, res) => {
     const {dateStart, dateEnd} = req.body;
-    if(dateStart == '' || dateEnd == ''){
+    if(dateStart == "" || dateEnd == ""){
         res.status(404).json({
             status : "404",
             message : "Not enough information",
@@ -35,42 +35,38 @@ router.post("/cinema",asyncHandler( async (req, res) => {
     }
     const startedDate = new Date(dateStart);
     const endDate = new Date(dateEnd);
-   // [Sequelize.literal('COUNT(DISTINCT(product))'), 'countOfProducts']
-
-    // SELECT b.id,COUNT(b.id),ci.name,s.price,SUM(t.price) as total FROM "Bookings" as b 
-    // JOIN "Showtimes" as s ON b.showtime_id = s.id 
-    // JOIN "Tickets" as t ON  b.id=t.booking_id
-    // JOIN "Theaters" as th ON th.id = s.theater_id 
-    // JOIN "Cinemas" as ci on ci.id = th.cinema_id 
-    // GROUP BY (ci.id,ci.name,b.id,s.price)
-    // ORDER BY total DESC
-    var listBookings = await booking.findAll( { 
-        where: {
-            paid: true,
-            bookingtime :{[Op.between] : [startedDate , endDate ]}
-        },
-        attributes:[[sequelize.fn('SUM', sequelize.col('tickets.price')), 'total'],[sequelize.fn('COUNT', sequelize.col('Booking.id')), 'count']],
+    
+   // [Sequelize.literal("COUNT(DISTINCT(product))"), "countOfProducts"]
+  // [[sequelize.fn('COALESCE', sequelize.fn('SUM', (mysql.col('col_name'), mysql.col('col_2_name'))), (some other code here ...)),'alias']]
+   //[sequelize.fn("SUM", sequelize.col("theater.showtime.bookings.totalprice")), "total"]
+    var listBookings = await cinema.findAll( { 
+        attributes:["id","name","address",
+                    [sequelize.fn("SUM", sequelize.col("theater.showtime.bookings.tickets.price")), "total"],
+                    [sequelize.fn("COUNT", sequelize.col("theater.showtime.bookings.tickets.id")), "count"]],
         include: [
             {
-                model: showtime, as: "showtime",
+                model: theater, as: "theater",
+                attributes: [],
                 include: [ {
-                    model: theater, as :"theater",
-                    attributes: ["cinema_id"],
+                    model: showtime, as :"showtime",
+                    attributes: [],
                     include: [{
-                        model: cinema, as: "cinema",
-                        attributes: ["id","name","address"]
+                        model: booking, as: "bookings",
+                        attributes: [],
+                        where: {
+                            paid: true,
+                            bookingtime :{[Op.between] : [startedDate , endDate ]}
+                        },
+                        include:[{
+                            model: ticket,as: "tickets",
+                            attributes: []
+                        }]
                     }],
-                }],
-                attributes: ["theater_id"],
-            },{
-                model: ticket, as: "tickets",
-                attributes: []
+                }]
             }
         ],
-        group: ["showtime->theater->cinema.id","Booking.id","showtime.id","showtime->theater.id","tickets.price"],
-        order: [
-            [sequelize.fn('SUM', sequelize.col('tickets.price')), 'DESC'],
-        ],
+        group: ["Cinema.id"],
+        order: sequelize.literal('total DESC')
     });
     res.status(200).send({
         status : "200",
@@ -88,7 +84,7 @@ router.post("/cinema",asyncHandler( async (req, res) => {
 // ORDER BY total DESC
 router.post("/movie",asyncHandler( async (req, res) => {
     const {dateStart, dateEnd} = req.body;
-    if(dateStart == '' || dateEnd == ''){
+    if(dateStart == "" || dateEnd == ""){
         res.status(404).json({
             status : "404",
             message : "Not enough information",
@@ -96,20 +92,20 @@ router.post("/movie",asyncHandler( async (req, res) => {
     }
     const startedDate = new Date(dateStart);
     const endDate = new Date(dateEnd);
-    //[sequelize.fn('SUM', sequelize.col('tickets.price')), 'total'],
+    //[sequelize.fn("SUM", sequelize.col("tickets.price")), "total"],
     var listMovies = await booking.findAll( { 
         where: {
             paid: true,
             bookingtime :{[Op.between] : [startedDate , endDate ]}
         },
-        attributes:["id",[sequelize.fn('SUM', sequelize.col('tickets.price')), 'total'],[sequelize.fn('COUNT', sequelize.col('tickets.id')), 'count']],
+        attributes:["id",[sequelize.fn("SUM", sequelize.col("tickets.price")), "total"],[sequelize.fn("COUNT", sequelize.col("tickets.id")), "count"]],
         include: [
             {
                 model: showtime, as: "showtime",
-                attributes: ['movie_id'],
+                attributes: ["movie_id"],
                 include: [{
-                    model: movie, as : 'movie',
-                    attributes: ["id",'name',"view"]
+                    model: movie, as : "movie",
+                    attributes: ["id","name","view"]
                 }],
             },{
                 model: ticket, as: "tickets",
@@ -117,9 +113,7 @@ router.post("/movie",asyncHandler( async (req, res) => {
             }
         ],
         group: ["showtime->movie.id","showtime->movie.view" ,"showtime.id","Booking.id"],
-        order: [
-            [sequelize.fn('SUM', sequelize.col('tickets.price')), 'DESC'],
-        ],
+        order: sequelize.literal('total DESC')
     });
     res.status(200).json({
         status : "200",
@@ -275,7 +269,7 @@ router.get("/history/:user",asyncHandler( async (req, res) => {
 }));
 router.post("/",asyncHandler( async (req, res) => {
     const { list_Seat,location_Seat,user_id,showtime_id }  = req.body;
-    if( location_Seat == 'null' || list_Seat == 'null' || user_id == "" || showtime_id == "" ) {
+    if( location_Seat == "null" || list_Seat == "null" || user_id == "" || showtime_id == "" ) {
         res.status(400).json({
             status : "400",
             message : "Not enough information"
@@ -340,14 +334,14 @@ const buy = async(list,user_id) => {
         },
     });
 
-    transporter.use('compile', hbs({
+    transporter.use("compile", hbs({
         viewEngine: {
-            extName:'.hbs', /* or '.handlebars' */
-            viewPath:__dirname +'/view/',
-            layoutsDir:__dirname +'/view/',
-            defaultLayout:'ticket'
+            extName:".hbs", /* or ".handlebars" */
+            viewPath:__dirname +"/view/",
+            layoutsDir:__dirname +"/view/",
+            defaultLayout:"ticket"
         },
-        viewPath: __dirname+ '/view/'
+        viewPath: __dirname+ "/view/"
     }));
     
     for (let i = 0; i < list.length; i++) {
@@ -392,8 +386,8 @@ const buy = async(list,user_id) => {
         let nameMovie = listBookings[i].dataValues.showtime.movie.name;
         let minute_time = listBookings[i].dataValues.showtime.movie.minute_time;
         let start_time = listBookings[i].dataValues.showtime.start_time;
-        let timestart  = moment(Date(start_time)).format('HH:mm');
-        let date = moment(Date(start_time)).format('YYYY-MM-DD');
+        let timestart  = moment(Date(start_time)).format("HH:mm");
+        let date = moment(Date(start_time)).format("YYYY-MM-DD");
 
         for (let index = 0; index < listTicket.length; index++) {
             let email = User.dataValues.email;
@@ -408,11 +402,11 @@ const buy = async(list,user_id) => {
                 date: date
             }
             await transporter.sendMail({
-                from: 'CCG Cinema ✔ <buingocyen055@gmail.com>',
+                from: "CCG Cinema ✔ <buingocyen055@gmail.com>",
                 to: email,
                 subject: "CCG Cinema Ticket",
-                text: 'Thank you!',
-                template: 'ticket',
+                text: "Thank you!",
+                template: "ticket",
                 context: data
         });
 
