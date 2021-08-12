@@ -93,26 +93,27 @@ router.post("/movie",asyncHandler( async (req, res) => {
     const startedDate = new Date(dateStart);
     const endDate = new Date(dateEnd);
     //[sequelize.fn("SUM", sequelize.col("tickets.price")), "total"],
-    var listMovies = await booking.findAll( { 
-        where: {
-            paid: true,
-            bookingtime :{[Op.between] : [startedDate , endDate ]}
-        },
-        attributes:["id",[sequelize.fn("SUM", sequelize.col("tickets.price")), "total"],[sequelize.fn("COUNT", sequelize.col("tickets.id")), "count"]],
+    var listMovies = await movie.findAll( { 
+        attributes:["id","name","view",[sequelize.fn("SUM", sequelize.col("showtime.bookings.tickets.price")), "total"],[sequelize.fn("COUNT", sequelize.col("showtime.bookings.tickets.id")), "count"]],
         include: [
             {
                 model: showtime, as: "showtime",
-                attributes: ["movie_id"],
+                attributes: [],
                 include: [{
-                    model: movie, as : "movie",
-                    attributes: ["id","name","view"]
+                    model: booking, as : "bookings",
+                    attributes: [],
+                    where:{
+                        paid: true,
+                        bookingtime :{[Op.between] : [startedDate , endDate ]}
+                    },
+                    include: [{
+                        model: ticket, as: "tickets",
+                       attributes: []
+                    }]
                 }],
-            },{
-                model: ticket, as: "tickets",
-                attributes: []
-            }
+            },
         ],
-        group: ["showtime->movie.id","showtime->movie.view" ,"showtime.id","Booking.id"],
+        group: ["Movie.id"],
         order: sequelize.literal('total DESC')
     });
     res.status(200).json({
