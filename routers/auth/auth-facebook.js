@@ -7,7 +7,7 @@ const user = require('../../models').User;
 
 router.post('/', asyncHandler(async function (request, response) {
     const { userID,name, email} = request.body;
-    const facebook_user = await user.findByFacebookId(facebookId)
+    const facebook_user = await user.findByFacebookId(userID)
     if(facebook_user){
         if(facebook_user.role === 'lock'){
             return response.status(200).json({
