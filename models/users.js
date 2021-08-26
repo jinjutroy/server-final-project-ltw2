@@ -56,7 +56,15 @@ const User = sequelize.define('User', {
     User.findByGoogleId = async function(googleId){
       return User.findOne({
           where:{
-                googleId,
+                googleId: googleId,
+            },
+        }); 
+      };
+
+    User.findByFacebookId = async function(facebookId){
+      return User.findOne({
+          where:{
+            facebookId: facebookId,
             },
         }); 
       };

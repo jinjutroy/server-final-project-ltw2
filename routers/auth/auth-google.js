@@ -9,6 +9,12 @@ router.post('/', asyncHandler(async function (request, response) {
     const { googleId,name, email} = request.body;
     const google_user = await user.findByGoogleId(googleId)
     if(google_user){
+        if(google_user.role === 'lock'){
+            return response.status(200).json({
+                message: " Google User is lock",
+                data: []
+            })
+        }
         return response.status(200).json({
             message: "Find Google User",
             data: google_user||[]
@@ -18,10 +24,11 @@ router.post('/', asyncHandler(async function (request, response) {
         fullname: name, 
         numphone: null, 
         googleId: googleId,
+        facebookId: '',
         gender: '',
         email: email,
         password: bcrypt.hashSync("000000", 10),
-        role: "user",
+        role: 'user',
         token: null ,
         active: true
     });
