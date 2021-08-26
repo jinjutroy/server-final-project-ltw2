@@ -120,7 +120,8 @@ router.post('/lock', asyncHandler(async function (request, response) {
         if (result){            
             return response.status(200).send({ 
                 message: 'Complete',
-                data:newUsers});
+                data:newUsers
+            });
         }
        
     }

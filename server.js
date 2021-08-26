@@ -36,6 +36,8 @@ const movieRoute = require('./routers/movie/movie');
 const userRoute = require('./routers/user/user');
 const showtimeRoute = require('./routers/showtime/showtime');
 const authGoogle = require('./routers/auth/auth-google');
+const authFacebook = require('./routers/auth/auth-facebook');
+
 
 //Set Request Size Limit
 app.use(function(req, res, next) {
@@ -51,6 +53,8 @@ app.use('/api/confirm',confirmRoute);
 app.use('/api/forgetpassword',forgetpassRoute);
 app.use('/api/active',activeRoute);
 app.use('/api/auth/google',authGoogle);
+app.use('/api/auth/facebook',authFacebook);
+
 
 app.use('/load/data',dataRoute);
 app.use('/delete/showtime',deleteShowtimeRoute);
