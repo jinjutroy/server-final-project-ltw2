@@ -102,7 +102,8 @@ router.post('/update', asyncHandler(async function (request, response) {
         if (result){            
             return response.status(200).send({ 
                 Status: 'Complete',
-                data:newUsers});
+                data:newUsers
+            });
         }
        
     }
@@ -119,7 +120,7 @@ router.post('/lock', asyncHandler(async function (request, response) {
           });
         if (result){            
             return response.status(200).send({ 
-                message: 'Complete',
+                Status: 'Complete',
                 data:newUsers
             });
         }
