@@ -16,6 +16,10 @@ const User = sequelize.define('User', {
       type: DataTypes.STRING(100),
       allowNull: true,
     },
+    facebookId: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
     fullname: {
       type: DataTypes.STRING(50),
       allowNull: false,
