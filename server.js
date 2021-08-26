@@ -39,12 +39,17 @@ const authGoogle = require('./routers/auth/auth-google');
 const authFacebook = require('./routers/auth/auth-facebook');
 
 
+
 //Set Request Size Limit
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+app.get('/', function (req, res) {
+  res.send('Welcome to Cinema CCG')
+})
 
 //app use
 app.use('/api/login',loginRoute);
