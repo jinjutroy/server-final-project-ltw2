@@ -16,6 +16,7 @@ const user = require("../../models").User;
 const theater = require("../../models").Theater;
 const cinema = require("../../models").Cinema;
 const movie = require("../../models").Movie;
+const { start } = require("repl");
 
 router.get("/",asyncHandler( async (req, res) => {
     var listBookings = await booking.findAll();
@@ -386,9 +387,12 @@ const buy = async(list,user_id) => {
         let addressCinema = listBookings[i].dataValues.showtime.theater.cinema.address;
         let nameMovie = listBookings[i].dataValues.showtime.movie.name;
         let minute_time = listBookings[i].dataValues.showtime.movie.minute_time;
-        let start_time = listBookings[i].dataValues.showtime.start_time;
-        let timestart  = moment(Date(start_time)).format("HH:mm");
-        let date = moment(Date(start_time)).format("YYYY-MM-DD");
+        let start_time = listBookings[i].dataValues.showtime.start_time.split(' ');
+        
+        let timestart  = start_time[1];
+        let date = start_time[0];
+        
+        console.log("🚀 ~ file: booking.js ~ line 390 ~ buy ~ start_time", start_time)
 
         for (let index = 0; index < listTicket.length; index++) {
             let email = User.dataValues.email;
