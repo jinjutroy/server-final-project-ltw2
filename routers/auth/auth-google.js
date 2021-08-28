@@ -7,6 +7,18 @@ const user = require('../../models').User;
 
 router.post('/', asyncHandler(async function (request, response) {
     const { googleId,name, email} = request.body;
+    const account = await user.findByEmail(email);
+    if(account){
+        await user.update({ googleId : googleId }, {
+            where: {
+                email: email
+            }
+        })
+        return response.status(200).json({
+            message: "Find User",
+            data: account||[]
+        })
+    }
     const google_user = await user.findByGoogleId(googleId)
     if(google_user){
         if(google_user.role === 'lock'){

@@ -7,6 +7,18 @@ const user = require('../../models').User;
 
 router.post('/', asyncHandler(async function (request, response) {
     const { userID,name, email} = request.body;
+    const account = await user.findByEmail(email);
+    if(account){
+        await user.update({ facebookId : userID }, {
+            where: {
+                email: email
+            }
+        })
+        return response.status(200).json({
+            message: "Find User",
+            data: account||[]
+        })
+    }
     const facebook_user = await user.findByFacebookId(userID)
     if(facebook_user){
         if(facebook_user.role === 'lock'){
